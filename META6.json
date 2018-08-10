@@ -1,0 +1,15 @@
+{
+    "license": "Choose me!",
+    "source-url": "Write me!",
+    "depends": [],
+    "provides": {
+        "swca": "bin/swca",
+        "sw_d20_character_aid": "lib/sw_d20_character_aid.pm6"
+    },
+    "name": "sw_d20_character_aid",
+    "description": "Write me!",
+    "resources": [],
+    "perl": "6.*",
+    "version": "0.1",
+    "authors": []
+}

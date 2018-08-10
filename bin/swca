@@ -1,0 +1,9 @@
+#!/usr/bin/env perl6
+# use sw_d20_character_aid;
+
+sub read-skills($filename) {
+    # Appraise (Int) Untrained
+    # Noble, Scoundrel
+
+    for $filename.IO.lines ->
+}
