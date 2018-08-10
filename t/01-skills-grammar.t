@@ -34,4 +34,37 @@ use Test;
     is $match<modifier>[1], "Untrained", '... and usuable untrained"';
 }
 
+{
+    my $match = SWCA::Skill.parse('Astrogate (Int)', :rule<first-line>);
+    isa-ok $match, Match, 'Got a match';
+    ok $match,  'Astrogate is valid first line';
+    is $match<name>, "Astrogate", '... named Astrogate';
+    is $match<attribute>, "(Int)", '... based on Int';
+}
+
+{
+    my $match = SWCA::Skill.parse('Scoundrel, Scout, Soldier, Tech Specialist', :rule<second-line>);
+    isa-ok $match, Match, 'Got a match';
+    ok $match,  'Classes are valid';
+    is $match<name>[0], "Scoundrel",       '... and are Scoundrel';
+    is $match<name>[1], "Scout",           '...         Scout';
+    is $match<name>[2], "Soldier",         '...         Soldier';
+    is $match<name>[3], "Tech Specialist", '...     and Tech Specialist';
+}
+
+{
+    my $skill = q:to/END/.chop;
+                    Astrogate (Int)
+                    Scoundrel, Scout, Soldier, Tech Specialist
+                    END
+    dd $skill;
+    my $match = SWCA::Skill.parse($skill, :rule<skill>);
+    isa-ok $match, Match, 'Got a match';
+    ok $match,  'Astrogate is valid skill';
+    is $match<first-line><name>, "Astrogate", '... named Astrogate';
+    is $match<first-line><attribute>, "(Int)", '... based on Int';
+    is $match<second-line><name>[0], "Scoundrel", '... for Scoundrel';
+    is $match<second-line><name>[3], "Tech Specialist", '... for Tech Specialist (etc)';
+}
+
 done-testing;

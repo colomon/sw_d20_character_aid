@@ -6,7 +6,8 @@ grammar SWCA::Skill {
     token modifier { "Untrained" | "Force" }
     token attribute { '(' \w ** 3 ')' }
     token name { [\w+]+ % \s+ }
-    rule first-line { ^^ <name> <attribute> <modifier>* % [\s+] $$ }
-    rule second-line { ^^ (.*?)+ % [ \s* ',' \s* ] }
+    token first-line { ^^ <name> \h+ <attribute> [\h+ <modifier>* % [\h+]]? $$ }
+    rule second-line { ^^ <name>+ % [ \s* ',' \s* ] $$ }
+    rule skill { <first-line> <second-line> }
 }
 
