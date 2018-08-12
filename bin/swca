@@ -1,9 +1,17 @@
 #!/usr/bin/env perl6
-# use sw_d20_character_aid;
+use sw_d20_character_aid;
 
 sub read-skills($filename) {
-    # Appraise (Int) Untrained
-    # Noble, Scoundrel
+    my $match = SWCA::Skill::Grammar.parse($filename.IO.slurp, :rule<TOP>, :actions(SWCA::Skill::Actions.new));
 
-    for $filename.IO.lines ->
+    my %skills;
+    for $match<skill> -> $skill {
+        %skills{$skill.ast.name} = $skill.ast;
+    }
+    dd %skills;
+    %skills;
+}
+
+sub MAIN($filename) {
+    read-skills($filename);
 }
