@@ -43,3 +43,38 @@ class SWCA::Skill::Actions {
     }
 }
 
+class SWCA::Character {
+    has %.stat;
+    has %.skill-ranks;
+}
+
+grammar SWCA::Character::Grammar {
+    token attribute-name { 'Str' | 'Int' | 'Wis' | 'Dex' | 'Con' | 'Chr' }
+    token attribute-score { \d+ }
+    token attribute { <attribute-name> \h* ':' \h* <attribute-score> }
+
+    token name { [\w+]+ % \h+ }
+    token ranks { \d+ }
+    token skill-rank { <name> \h* ':' \h* <ranks> }
+
+    token TOP { [<attribute> \v] ** 6 \v* <skill-rank>+ % \v \s* }
+}
+
+class SWCA::Character::Actions {
+    method TOP($/) {
+        my %stat;
+        for @($/<attribute>) -> $stat {
+            %stat{$stat<attribute-name>} = +$stat<attribute-score>;
+        }
+        dd %stat;
+
+        my %skill-ranks;
+        for @($/<skill-rank>) -> $skill {
+            %skill-ranks{$skill<name>} = +$skill<ranks>;
+        }
+        dd %skill-ranks;
+
+        make SWCA::Character.new(:%stat, :%skill-ranks);
+    }
+}
+
