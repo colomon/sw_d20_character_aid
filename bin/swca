@@ -8,10 +8,30 @@ sub read-skills($filename) {
     for $match<skill> -> $skill {
         %skills{$skill.ast.name} = $skill.ast;
     }
-    dd %skills;
     %skills;
 }
 
+sub read-character($filename) {
+    my $match = SWCA::Character::Grammar.parse($filename.IO.slurp, :rule<TOP>, :actions(SWCA::Character::Actions.new));
+    $match.ast;
+}
+
+sub score-to-bonus($score) {
+    $score div 2 - 5;
+}
+
 sub MAIN($filename) {
-    read-skills($filename);
+    my %skills = read-skills("skills");
+    my $character = read-character($filename);
+
+    for %skills.keys.sort -> $skill {
+        if $character.skill-ranks{$skill}:exists || %skills{$skill}.modifiers<Untrained> {
+            my $ranks = $character.skill-ranks{$skill} // 0;
+            my $attribute-bonus = score-to-bonus($character.stat{%skills{$skill}.attribute});
+            say "$skill: { $ranks + $attribute-bonus } = $ranks + $attribute-bonus";
+
+
+        }
+    }
+
 }
